@@ -1,5 +1,5 @@
-from typing import NamedTuple
 from math import sqrt
+from typing import NamedTuple
 
 
 class v(NamedTuple):
@@ -17,7 +17,9 @@ def main():
     dis_list = []
     for i in range(N):
         for j in range(i + 1, N):
-            dis = sqrt((v_list[i].x - v_list[j].x) ** 2 + (v_list[i].y - v_list[j].y) ** 2)
+            dis = sqrt(
+                (v_list[i].x - v_list[j].x) ** 2 + (v_list[i].y - v_list[j].y) ** 2
+            )
             dis_list.append(dis)
 
     print(max(dis_list))
