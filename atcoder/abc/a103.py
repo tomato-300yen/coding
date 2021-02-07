@@ -1,0 +1,5 @@
+a, b, c = tuple(map(int, input().split()))
+diff1 = abs(a - b)
+diff2 = abs(b - c)
+diff3 = abs(c - a)
+print(min(diff1 + diff2, diff2 + diff3, diff3 + diff1))
