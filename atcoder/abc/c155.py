@@ -8,7 +8,6 @@ for s in S:
         dict_count[s] = 1
 list_count = [[key, value] for key, value in dict_count.items()]
 list_count.sort(key=lambda ll: (-ll[1], ll[0]))
-print(list_count)
 max_num = list_count[0][1]
 for key, value in list_count:
     if value != max_num:
