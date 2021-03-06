@@ -1,6 +1,2 @@
-S = input()
-ans = ""
-for s in S:
-    if not s.isalpha():
-        ans = ans + s
-print(ans)
+import re
+print(*re.findall("[\d]{1,2}", input()))
