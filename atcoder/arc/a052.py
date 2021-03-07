@@ -1,2 +1,2 @@
 import re
-print(*re.findall("[\d]{1,2}", input()))
+print(re.sub("\D", "", input()))
