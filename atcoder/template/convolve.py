@@ -2,6 +2,18 @@ import numpy as np
 
 
 def convolve(f, g):
+    fft_len = 1
+    while fft_len < len(f) + len(g) - 1:
+        fft_len *= 2
+    Ff = np.fft.rfft(f, fft_len)
+    Fg = np.fft.rfft(g, fft_len)
+    Ffg = Ff * Fg
+    fg = np.fft.irfft(Ffg, fft_len)
+    fg = np.rint(fg).astype(np.int64)
+    return fg[: len(f) + len(g) - 1]
+
+
+def convolve_(f, g):
     """多項式 f, g の積を計算する。
 
     Parameters
