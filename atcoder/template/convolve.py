@@ -13,6 +13,26 @@ def convolve(f, g):
     return fg[: len(f) + len(g) - 1]
 
 
+def convolve_p(f, g, p):
+    """
+    多項式f, gの積をmod p で計算する。
+    少数を経由するため計算誤差が生じるが、pが10^9程度、
+    f, gの長さが250000以下程度であれば、正確に計算できる。
+    """
+    # f = 2^15 f_1 + f2 みたいに分解
+    f1, f2 = np.divmod(f, 1 << 15)
+    g1, g2 = np.divmod(g, 1 << 15)
+
+    # h = 2^30 a + 2^15 b + c となるa, b, cを計算する
+    # b については、b = f1g1 + f2g1 = (f1+f2)(g1+g2) - (f1g1 + f2g2)を利用
+    a = convolve(f1, g1) % p
+    c = convolve(f2, g2) % p
+    b = (convolve(f1 + f2, g1 + g2) - (a + c)) % p
+
+    h = (a << 30) + (b << 15) + c
+    return h % p
+
+
 def convolve_(f, g):
     """多項式 f, g の積を計算する。
 
