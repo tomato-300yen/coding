@@ -1,49 +1,32 @@
-N = int(input())
-bad_set = set(
-    [
-        "AGC",
-        "ACG",
-        "GAC",
-        "AGAC",
-        "AGGC",
-        "AGCC",
-        "AGTC",
-        "AAGC",
-        "AGGC",
-        "ACGC",
-        "ATGC",
-    ]
-)
+N, MOD = int(input()), 10 ** 9 + 7
+memo = [{} for i in range(N + 1)]
 
 
-def dfs(a, b, c, d, num, length):
-    """
-    a,b,c : 直前3つの文字
-    d : 追加しようとしている文字
-    num : 現時点での題意を満たす文字列の数
-    """
-    tmp1 = b + c + d
-    tmp2 = a + b + c + d
-    if tmp1 in bad_set or tmp2 in bad_set:
-        return 0
-    else:
-        if length == N:
-            return num
-        else:
-            return (
-                dfs(b, c, d, "A", num, length + 1)
-                + dfs(b, c, d, "G", num, length + 1)
-                + dfs(b, c, d, "T", num, length + 1)
-                + dfs(b, c, d, "C", num, length + 1)
-            ) % (10 ** 9 + 7)
+def ok(last4):
+    for i in range(4):
+        t = list(last4)
+        if i >= 1:
+            t[i - 1], t[i] = t[i], t[i - 1]
+        if "".join(t).count("AGC") >= 1:
+            return False
+    return True
 
 
-print(
-    (
-        dfs("x", "x", "x", "A", 1, 1)
-        + dfs("x", "x", "x", "T", 1, 1)
-        + dfs("x", "x", "x", "G", 1, 1)
-        + dfs("x", "x", "x", "C", 1, 1)
-    )
-    % (10 ** 9 + 7)
-)
+def dfs(cur, last3):
+    # memoがあればそれを返す
+    if last3 in memo[cur]:
+        return memo[cur][last3]
+    # 文字列の長さがNになったら1を返す
+    if cur == N:
+        return 1
+    # それぞれを追加できるか確認し、
+    # 追加できる場合はdfsを呼ぶ
+    ret = 0
+    for c in "ACGT":
+        if ok(last3 + c):
+            ret = (ret + dfs(cur + 1, last3[1:] + c)) % MOD
+    memo[cur][last3] = ret
+    return ret
+
+
+print(dfs(0, "TTT"))
