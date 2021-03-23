@@ -1,19 +1,3 @@
-class Node:
-    def __init__(self, val, parrent=None, children=[]):
-        self.parrent_of_tree = parrent
-        self.children = children
-        self.val = val  # root
-
-    def reset_children(self):
-        self.children = []
-
-    def add_children(self, node):
-        self.children.append(node)
-
-    def set_parrent(self, node):
-        self.parrent_of_tree = node
-
-
 class UnionFindTree:
 
     __all__ = ["find_root", "merge", "same", "size"]
@@ -26,19 +10,24 @@ class UnionFindTree:
         #  if negative : V is the root of the group
         #                and the value*(-1) is the size of the tree
         #  else        : the value is the parent node of V
-        # self._parent_or_size = [-1] * maxsize
-        self._parent_or_size = [None(val=-1)] * maxsize
+        self._parent_or_size = [-1] * maxsize
 
-    def find_root_node(self, a):
-        """Find the root of a. Dose not change tree structure"""
+    def find_root(self, a):
+        """Find the root of a"""
         assert 0 <= a < self._n
 
-        node_pos = self._parent_or_size[a]
-        while node_pos.val >= 0:
-            node_pos = self._parent_or_size[node_pos.val]
+        pos = a
+        children = []
+        # Follow the path to the root
+        while self._parent_or_size[pos] >= 0:
+            children.append(pos)
+            pos = self._parent_or_size[pos]
         else:
-            node_root_pos = node_pos
-        return node_root_pos
+            root_pos = pos
+        # Set the parent of child_pos to root_pos
+        for child_pos in children:
+            self._parent_or_size[child_pos] = root_pos
+        return root_pos
 
     def merge(self, a, b):
         """Merge the group of a and the group of b"""
@@ -47,21 +36,15 @@ class UnionFindTree:
 
         root_a = self.find_root(a)
         root_b = self.find_root(b)
-        if root_a.val == root_b.val:
+        if root_a == root_b:
             return True
         else:
             # The size of the group of b should be larger
-            if (
-                -self._parent_or_size[root_a.val].val
-                > -self._parent_or_size[root_b.val].val
-            ):
+            if -self._parent_or_size[root_a] > -self._parent_or_size[root_b]:
                 root_a, root_b = root_b, root_a
             # Merge the group of a with the group of b
-            self._parent_or_size[root_b.val].val += self._parent_or_size[root_a.val].val
-            self._parent_or_size[root_a.val].val = root_b.val
-            # b is parent, a is child
-            self._parent_or_size[root_a.val].set_parrent(root_b)
-            self._parent_or_size[root_b.val].add_children(root_a)
+            self._parent_or_size[root_b] += self._parent_or_size[root_a]
+            self._parent_or_size[root_a] = root_b
             return False
 
     def same(self, a, b):
@@ -83,8 +66,20 @@ class UnionFindTree:
 
 N, M = map(int, input().split())
 ABY = [list(map(int, input().split())) for i in range(M)]
-ABY = sorted(ABY, key=lambda x: -x[2])
 Q = int(input())
-VW = [list(map(int, input().split())) for i in range(Q)]
+VW = [[0, i] + list(map(int, input().split())) for i in range(Q)]
 
+Querry = sorted(ABY + VW, key=lambda ll: (-ll[-1], -len(ll)))
 tree = UnionFindTree(N)
+ans = [-1 for i in range(Q)]
+for ll in Querry:
+    if len(ll) == 3:
+        tree.merge(ll[0] - 1, ll[1] - 1)
+    elif len(ll) == 4:
+        ans[ll[1]] = tree.size(ll[-2] - 1)
+    else:
+        assert False
+
+# print(tree._parent_or_size)
+# print()
+print(*ans, sep="\n")
