@@ -66,11 +66,15 @@ class UnionFindTree:
 
 N, M = map(int, input().split())
 AB = [list(map(int, input().split())) for i in range(M)]
-count_break = [N] * N
-count_break[-1] = -N
-for a, b in AB:
-    count_break[a - 1] += 1
-    count_break[b - 1] += 1
-
-count_break = list(map(lambda x: N - 1 - x, count_break))
 tree = UnionFindTree(N)
+ans = [N * (N - 1) // 2]
+for a, b in reversed(AB):
+    a -= 1
+    b -= 1
+    if tree.same(a, b):
+        tmp = 0
+    else:
+        tmp = tree.size(a) * tree.size(b)
+    tree.merge(a, b)
+    ans.append(ans[-1] - tmp)
+print(*reversed(ans[:-1]), sep="\n")
