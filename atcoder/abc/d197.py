@@ -6,10 +6,7 @@ def rotate(arr, theta):
     """
     arrを原点を中心にthetaだけ半時計周りに回転させる
     """
-    rot_mat = np.array([
-        [cos(theta), sin(theta)],
-        [-sin(theta), cos(theta)]
-    ])
+    rot_mat = np.array([[cos(theta), sin(theta)], [-sin(theta), cos(theta)]])
     return arr @ rot_mat
 
 
