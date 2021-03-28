@@ -65,6 +65,14 @@ class UnionFindTree:
 
 
 N, M = map(int, input().split())
-AB = [list(map(int, input().split())) for i in range(M)]
+AB = [list(map(lambda x: int(x) - 1, input().split())) for i in range(M)]
+ans = 0
 for i in range(M):
-    pass
+    tree = UnionFindTree(N)
+    for j, (a, b) in enumerate(AB):
+        if i == j:
+            continue
+        tree.merge(a, b)
+    if not tree.same(AB[i][0], AB[i][1]):
+        ans += 1
+print(ans)
