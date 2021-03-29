@@ -35,24 +35,24 @@ class GraphList:
         Return shoretet distance from node_start
         """
         assert 0 <= node_start < self._n
-        dist_dijkstra = [initval] * self._n
+        list_dijkstra = [initval] * self._n
         heapnode_dist = [node_start]
         while heapnode_dist:
             # Where to visit
             nodedist_now = heapq.heappop(heapnode_dist)
             cost, node_to = divmod(nodedist_now, self._n)
             # Continue if visited
-            if dist_dijkstra[node_to] != initval:
+            if list_dijkstra[node_to] != initval:
                 continue
             # Visit
-            dist_dijkstra[node_to] = cost
+            list_dijkstra[node_to] = cost
 
             # Update cost of nodes adjacent to the node(node_to).
             for edge_nxt in self._edges[node_to]:
                 cost_nxt, node_nxt = divmod(edge_nxt, self._n)
                 # continue if visited
-                if dist_dijkstra[node_nxt] != initval:
+                if list_dijkstra[node_nxt] != initval:
                     continue
                 # Update cost
                 heapq.heappush(heapnode_dist, (cost + cost_nxt) * self._n + node_nxt)
-        return dist_dijkstra
+        return list_dijkstra
