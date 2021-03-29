@@ -22,12 +22,14 @@ class GraphList:
         if not directed:
             self._edges[b].append(cost * self._n + a)
 
-    def dijkstra(self, node_start, initval=float("inf")):
+    def dijkstra(self, node_start, initval=float("inf"), return_path=False):
         """
         Return shoretet distance from node_start
         """
         assert 0 <= node_start < self._n
         list_dijkstra = [initval] * self._n
+        list_path = [-1] * self._n
+        last_node = -1
         heapnode_dist = [node_start]
         while heapnode_dist:
             # Where to visit
@@ -38,6 +40,8 @@ class GraphList:
                 continue
             # Visit
             list_dijkstra[node_to] = cost
+            list_path[node_to] = last_node
+            last_node = node_to
 
             # Update cost of nodes adjacent to the node(node_to).
             for edge_nxt in self._edges[node_to]:
@@ -47,4 +51,4 @@ class GraphList:
                     continue
                 # Update cost
                 heapq.heappush(heapnode_dist, (cost + cost_nxt) * self._n + node_nxt)
-        return list_dijkstra
+        return list_dijkstra, list_path if return_path else list_dijkstra
