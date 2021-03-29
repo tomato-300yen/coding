@@ -2,7 +2,7 @@ import heapq
 
 
 class GraphList:
-    def __init__(self, maxsize=10 ** 6, edge_type="cost_mod"):
+    def __init__(self, maxsize=10 ** 6):
         """
         nodes : 0, 1, 2, ... , n-1
         edges[node_from] describes edges from node_from
@@ -12,20 +12,12 @@ class GraphList:
         """
         self._n = maxsize  # number of nodes
         self._edges = [[] for _ in range(self._n)]  # adjacency list
-        assert edge_type in set(["cost_mod", "unweighted"])
-        self._edgetype = edge_type  # edgetype
 
-    def add_edge(self, a, b, cost=None, directed=False):
+    def add_edge(self, a, b, cost=1, directed=False):
         """Add edge
         directed   : a ---> b (cost)
         undirected : a <--> b (cost)
         """
-        if self._edgetype == "cost_mod" and cost is not None:
-            pass
-        elif self._edgetype == "unweighted" and cost is None:
-            cost = 1
-        else:
-            assert False
         self._edges[a].append(cost * self._n + b)
         if not directed:
             self._edges[b].append(cost * self._n + a)
