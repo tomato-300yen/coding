@@ -12,7 +12,9 @@ for i in range(N):
             continue
         else:
             for k in range(N):
+                if i == k:  # 友達の友達が自分の場合
                     continue
+                # 友達の友達でない場合、直接の友達である場合
                 if friend_map[j][k] == 0 or friend_map[i][k] == 1 or k in f_of_f_set:
                     continue
                 else:
