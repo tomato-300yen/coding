@@ -18,7 +18,7 @@ class GraphMat:
         if not directed:
             self._edges[b][a] = cost
 
-    def bellman_ford(self):
+    def bellman_ford(self, start=None):
         """
         Return distance matrix
         """
@@ -28,6 +28,8 @@ class GraphMat:
         ]
         for k in range(self._n):
             for i in range(self._n):
+                if start is not None and start != i:
+                    continue
                 for j in range(self._n):
                     bf_list[i][j] = min(bf_list[i][j], bf_list[i][k] + bf_list[k][j])
         return bf_list
