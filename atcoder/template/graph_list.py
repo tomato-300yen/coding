@@ -31,8 +31,8 @@ class GraphList:
         heapnode_dist = [node_start]
         while heapnode_dist:
             # Where to visit
-            nodedist_now = heapq.heappop(heapnode_dist)
-            cost, node_to = divmod(nodedist_now, self._n)
+            node_now = heapq.heappop(heapnode_dist)
+            cost, node_to = divmod(node_now, self._n)
             # Continue if visited
             if list_dijkstra[node_to] != initval:
                 continue
