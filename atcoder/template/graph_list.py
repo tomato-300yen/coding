@@ -52,3 +52,32 @@ class GraphList:
                 # Update cost
                 heapq.heappush(heapnode_dist, (cost + cost_nxt) * self._n + node_nxt)
         return list_dijkstra, list_path if return_path else list_dijkstra
+
+    def prim(self, node_start, initval=float("inf"), return_edge_num=False):
+        """
+        Return the cost of min spanning tree (, and its number of edges)
+        """
+        assert 0 <= node_start < self._n
+        list_prim = [initval] * self._n
+        heapnode_dist = [node_start]
+        edge_num = 0
+        while heapnode_dist:
+            # Where to visit
+            node_now = heapq.heappop(heapnode_dist)
+            cost, node_to = divmod(node_now, self._n)
+            # Continue if visited
+            if list_prim[node_to] != initval:
+                continue
+            # Visit
+            list_prim[node_to] = cost
+            edge_num += 1
+
+            # Update cost of nodes adjacent to the node(node_to).
+            for edge_nxt in self._edges[node_to]:
+                cost_nxt, node_nxt = divmod(edge_nxt, self._n)
+                # continue if visited
+                if list_prim[node_nxt] != initval:
+                    continue
+                # Update cost
+                heapq.heappush(heapnode_dist, cost_nxt * self._n + node_nxt)
+        return sum(list_prim), edge_num if return_edge_num else list_prim
