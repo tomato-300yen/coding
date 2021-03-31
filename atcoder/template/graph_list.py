@@ -52,8 +52,9 @@ class GraphList:
 
     def bellman_ford(self, node_start, initval=float("inf")):
         """
+        Negative cost can be treated.
         Return shoretet distance to each nodes from node_start.
-        None is returned if negative loop was found
+        None is returned if negative loop was found.
         """
         assert 0 <= node_start < self._n
         list_bellman = [initval * self._n]
@@ -75,7 +76,8 @@ class GraphList:
 
     def prim(self, node_start, initval=float("inf"), return_edge_num=False):
         """
-        Return the cost of min spanning tree (, and its number of edges)
+        Return the cost of minimum spanning tree
+        (, and its number of edges if return_edge_num is True)
         """
         assert 0 <= node_start < self._n
         list_prim = [initval] * self._n
