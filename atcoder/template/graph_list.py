@@ -57,7 +57,8 @@ class GraphList:
         None is returned if negative loop was found.
         """
         assert 0 <= node_start < self._n
-        list_bellman = [initval * self._n]
+        list_bellman = [initval] * self._n
+        list_bellman[node_start] = 0
         queue = deque([node_start])
         count = 0
         while queue:
