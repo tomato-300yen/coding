@@ -65,10 +65,12 @@ class GraphList:
             node_now = queue.popleft()
             for edge_nxt in self._edges[node_now]:
                 cost_nxt, node_nxt = divmod(edge_nxt, self._n)
+                if list_bellman[node_nxt] != initval:
+                    continue
                 new_cost = list_bellman[node_now] + cost_nxt
                 if list_bellman[node_nxt] > new_cost:
                     list_bellman[node_nxt] = new_cost
-                    queue.push(node_nxt)
+                    queue.append(node_nxt)
                     # negative loop was found
                     if count == self._n:
                         return None
