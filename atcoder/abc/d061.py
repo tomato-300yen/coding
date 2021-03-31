@@ -1,6 +1,3 @@
-from collections import deque
-
-
 class GraphList:
     def __init__(self, maxsize=10 ** 6):
         """
@@ -26,26 +23,45 @@ class GraphList:
         """
         Negative cost can be treated.
         Return shoretet distance to each nodes from node_start.
-        None is returned if negative loop was found.
+        None is returned if negative loop was found. (Only for undirected)
         """
         assert 0 <= node_start < self._n
-        list_bellman = [initval] * self._n
-        list_bellman[node_start] = 0
-        queue = deque([node_start])
+        d = [initval] * self._n
+        d[node_start] = 0
         count = 0
-        while queue:
-            node_now = queue.popleft()
-            for edge_nxt in self._edges[node_now]:
-                cost_nxt, node_nxt = divmod(edge_nxt, self._n)
-                new_cost = list_bellman[node_now] + cost_nxt
-                if list_bellman[node_nxt] > new_cost:
-                    list_bellman[node_nxt] = new_cost
-                    queue.append(node_nxt)
-                    # negative loop was found
-                    if count == self._n:
-                        return None
-                    count += 1
-        return list_bellman
+        while True:
+            update = False
+            # for all edges
+            for i, e_list in enumerate(self._edges):
+                for e in e_list:
+                    cost, node_to = divmod(e, self._n)
+                    if (d[i] != float("inf")) and (d[node_to] > d[i] + cost):
+                        d[node_to] = d[i] + cost
+                        update = True
+            if not update:
+                break
+            count += 1
+            if count == self._n:
+                return None
+        return d
+
+    def find_negative_loop(self):
+        """
+        Return if the graph has negative looop. (only for undirected)
+        """
+        d = [0] * self._n
+        # from node i
+        for i in range(self._n):
+            # for all edges
+            for j, e_line in enumerate(self._edges):
+                for e in e_line:
+                    cost, node_nxt = divmod(e, self._n)
+                    if d[node_nxt] > d[j] + cost:
+                        d[node_nxt] = d[j] + cost
+
+                        if i == self._n - 1:
+                            return True
+        return False
 
 
 N, M = map(int, input().split())
