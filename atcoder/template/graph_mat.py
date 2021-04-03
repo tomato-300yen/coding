@@ -18,18 +18,22 @@ class GraphMat:
         if not directed:
             self._edges[b][a] = cost
 
-    def bellman_ford(self, start=None):
+    def bellman_ford(self, node_start=None):
         """
         Return distance matrix
         """
+        assert (0 <= node_start < self._n) or node_start is None
         bf_list = [
             [0 if i == j else float("inf") for i in range(self._n)]
             for j in range(self._n)
         ]
         for k in range(self._n):
             for i in range(self._n):
-                if start is not None and start != i:
+                if node_start is not None and node_start != i:
                     continue
                 for j in range(self._n):
                     bf_list[i][j] = min(bf_list[i][j], bf_list[i][k] + bf_list[k][j])
-        return bf_list
+        return bf_list if node_start is None else bf_list[node_start]
+
+    def find_negative_loop(self):
+        return False
