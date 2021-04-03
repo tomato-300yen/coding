@@ -49,7 +49,7 @@ class GraphMat:
                 if node_start is not None and node_start != i:
                     continue
                 for j in range(self._n):
-                    bf_list[i][j] = min(bf_list[i][j], bf_list[i][k] + bf_list[k][j])
+                    bf_list[i][j] = min(bf_list[i][j], self._edges[i][k] + self._edges[k][j])
         return bf_list if node_start is None else bf_list[node_start]
 
     def find_negative_loop(self):
