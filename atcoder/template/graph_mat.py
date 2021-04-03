@@ -25,7 +25,6 @@ class GraphMat:
         """
         assert 0 <= node_start < self._n
         l_dij = [initval] * self._n
-        l_dij[node_start] = 0
         heapnode_dist = [(0, node_start)]  # (distance, node)
         while heapnode_dist:
             cost, node_now = heapq.heappop(heapnode_dist)
@@ -38,6 +37,25 @@ class GraphMat:
                     continue
                 heapq.heappush(heapnode_dist, (cost + dist, node_to))
         return l_dij
+
+    def prim(self, node_start, initval=float("inf")):
+        """
+        Return shoretet distance to each nodes from node_start
+        """
+        assert 0 <= node_start < self._n
+        l_prim = [initval] * self._n
+        heapnode_dist = [(0, node_start)]  # (distance, node)
+        while heapnode_dist:
+            cost, node_now = heapq.heappop(heapnode_dist)
+            if l_prim[node_now] != initval:
+                continue
+            # visit
+            l_prim[node_now] = cost
+            for node_to, dist in enumerate(self._edges[node_now]):
+                if node_to == node_now or dist == float("inf"):
+                    continue
+                heapq.heappush(heapnode_dist, (dist, node_to))
+        return l_prim
 
     def bellman_ford(self, node_start=None):
         """
