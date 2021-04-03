@@ -29,9 +29,9 @@ class GraphList:
         assert 0 <= node_start < self._n
         list_dijkstra = [initval] * self._n
         heapnode_dist = [node_start]
-        while heapnode_dist:
+        while heapnode_dist:  # O(N)
             # Where to visit
-            node_now = heapq.heappop(heapnode_dist)
+            node_now = heapq.heappop(heapnode_dist)  # O(logN)
             cost, node_to = divmod(node_now, self._n)
             # Continue if visited
             if list_dijkstra[node_to] != initval:
@@ -40,13 +40,13 @@ class GraphList:
             list_dijkstra[node_to] = cost
 
             # Update cost of nodes adjacent to the node(node_to).
-            for edge_nxt in self._edges[node_to]:
+            for edge_nxt in self._edges[node_to]:  # O(M)
                 cost_nxt, node_nxt = divmod(edge_nxt, self._n)
                 # continue if visited
                 if list_dijkstra[node_nxt] != initval:
                     continue
                 # Update cost
-                heapq.heappush(heapnode_dist, (cost + cost_nxt) * self._n + node_nxt)
+                heapq.heappush(heapnode_dist, (cost + cost_nxt) * self._n + node_nxt)  # O(logN)
         return list_dijkstra
 
     def bellman_ford(self, node_start, initval=float("inf")):
