@@ -19,6 +19,26 @@ class GraphMat:
         if not directed:
             self._edges[b][a] = cost
 
+    def dijkstra(self, node_start, initval=float("inf")):
+        """
+        Return shoretet distance to each nodes from node_start
+        ** TOO SLOW **
+        """
+        assert 0 <= node_start < self._n
+        l_dij = [initval] * self._n
+        heapnode_dist = [(0, node_start)]  # (distance, node)
+        while heapnode_dist:  # O(N)
+            cost, node_now = heapq.heappop(heapnode_dist)  # (logN)
+            if l_dij[node_now] != initval:
+                continue
+            # visit
+            l_dij[node_now] = cost
+            for node_to, dist in enumerate(self._edges[node_now]):  # O(N)
+                if node_to == node_now or l_dij[node_to] != initval:
+                    continue
+                heapq.heappush(heapnode_dist, (cost + dist, node_to))  # O(logN)
+        return l_dij
+
     def prim(self, node_start, initval=float("inf")):
         """
         Return shoretet distance to each nodes from node_start
