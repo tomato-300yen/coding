@@ -5,6 +5,8 @@ class Dinic:
     def __init__(self, N):
         self.N = N
         self.G = [[] for i in range(N)]
+        self.level = None
+        self.it = None
 
     def add_edge(self, fr, to, cap):
         """
@@ -26,19 +28,22 @@ class Dinic:
         self.G[v1].append(edge1)
         self.G[v2].append(edge2)
 
-    def bfs(self, s, t):
+    def bfs(self, node_start, node_goal):
+        """
+        Return if node_gloal can be reached from node_start.
+        """
         self.level = level = [None] * self.N
-        deq = deque([s])
-        level[s] = 0
-        G = self.G
+        deq = deque([node_start])
+        level[node_start] = 0
         while deq:
-            v = deq.popleft()
-            lv = level[v] + 1
-            for w, cap, _ in G[v]:
-                if cap and level[w] is None:
-                    level[w] = lv
-                    deq.append(w)
-        return level[t] is not None
+            node_nxt = deq.popleft()
+            lv = level[node_nxt] + 1
+            for node_to, cap, _ in self.G[node_nxt]:
+                # if cap > 0 and node_to is not visited
+                if cap and level[node_to] is None:
+                    level[node_to] = lv
+                    deq.append(node_to)
+        return level[node_goal] is not None
 
     def dfs(self, v, t, f):
         if v == t:
