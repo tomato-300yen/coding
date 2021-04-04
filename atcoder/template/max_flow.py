@@ -31,6 +31,7 @@ class Dinic:
     def bfs(self, node_start, node_goal):
         """
         Return if node_gloal can be reached from node_start.
+        Update level.
         """
         self.level = level = [None] * self.N
         deq = deque([node_start])
@@ -45,23 +46,23 @@ class Dinic:
                     deq.append(node_to)
         return level[node_goal] is not None
 
-    def dfs(self, v, t, f):
-        if v == t:
+    def dfs(self, node_now, node_goal, f):
+        if node_now == node_goal:
             return f
         level = self.level
-        for e in self.it[v]:
-            w, cap, rev = e
-            if cap and level[v] < level[w]:
-                d = self.dfs(w, t, min(f, cap))
+        for edge in self.it[node_now]:
+            node_to, cap, rev = edge
+            if cap and level[node_now] < level[node_to]:
+                d = self.dfs(node_to, node_goal, min(f, cap))
                 if d:
-                    e[1] -= d
+                    edge[1] -= d
                     rev[1] += d
                     return d
         return 0
 
     def flow(self, s, t):
         flow = 0
-        INF = 10 ** 9 + 7
+        INF = float("inf")
         G = self.G
         while self.bfs(s, t):
             (*self.it,) = map(iter, G)
